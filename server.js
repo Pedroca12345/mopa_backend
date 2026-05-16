@@ -16,7 +16,7 @@ mongoose.connect(URI)
   .then(() => console.log("MongoDB conectado"))
   .catch((err) => console.log(err));
 
-app.get("/protected", authMiddleware, (req, res) => {
+app.get("/home", authMiddleware, (req, res) => {
   res.status(200).json({
     message: "Passou no middleware",
     user: req.user

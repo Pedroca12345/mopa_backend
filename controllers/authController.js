@@ -6,9 +6,9 @@ require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const registerController = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (name && email && password) {
+  if (username && email && password) {
 
     const existingUser = await User.findOne({ email: email }).exec();
 
@@ -18,7 +18,7 @@ const registerController = async (req, res) => {
 
     const hash = await bcrypt.hash(password, 10);
     const user = {
-      name: name,
+      username: username,
       email: email,
       password: hash
     };
