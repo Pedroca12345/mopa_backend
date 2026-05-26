@@ -32,25 +32,25 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (email && password) {
-    const registeredUser = await User.findOne({ email: email });
+  if (username && password) {
+    const registeredUser = await User.findOne({ username: username });
 
     if (!registeredUser) {
-      return res.status(401).json({ message: "Email ou senha inválidos" });
+      return res.status(401).json({ message: "Nome de usuário ou senha inválidos" });
     }
 
     const matchedPassword = await bcrypt.compare(password, registeredUser.password);
 
     if (!matchedPassword) {
-      return res.status(401).json({ message: "Email ou senha inválidos" });
+      return res.status(401).json({ message: "Nome de usuário ou senha inválidos" });
     }
 
     const token = jwt.sign(
       { 
         id:registeredUser._id,
-        email: registeredUser.email 
+        username: registeredUser.username 
       },
       JWT_SECRET,
       {
