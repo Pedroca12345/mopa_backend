@@ -48,20 +48,21 @@ const loginController = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { 
-        id:registeredUser._id,
-        username: registeredUser.username 
+      {
+        id: registeredUser._id,
+        username: registeredUser.username
       },
       JWT_SECRET,
       {
         expiresIn: "1h",
       });
 
-
-
     return res.status(200).json({
-      message: "Usuário logado",
-      token: token,
+      token,
+      user: {
+        id: registeredUser._id,
+        username: registeredUser.username
+      }
     });
   }
 

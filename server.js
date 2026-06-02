@@ -3,7 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const authMiddleware = require("./middlewares/authMiddleware");
 const authRoutes = require("./routes/authRoutes");
-const sheetjs = require("xlsx");
+const partRoutes = require("./routes/partRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -19,13 +19,13 @@ mongoose.connect(URI)
 
 app.get("/home", authMiddleware, (req, res) => {
   res.status(200).json({
-    message: "Passou no middleware",
     user: req.user
   }
   );
 });
 
 app.use("/", authRoutes);
+app.use("/", partRoutes)
 
 app.listen(3000, () => {
   console.log("app rodando na porta 3000");
