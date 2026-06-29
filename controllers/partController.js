@@ -1,6 +1,6 @@
 const Part = require("../models/Part");
 
-const partController = async (req, res) => {
+const registerPartController = async (req, res) => {
   const {
     partcode,
     quantity,
@@ -36,4 +36,22 @@ const partController = async (req, res) => {
   }
 }
 
-module.exports = partController;
+const getPartController = async (req, res) => {
+  const { 
+    partcode
+   } = req.body;
+
+   const part = await Part.findOne({ partcode: partcode }).select("location description quantity");
+
+   if(part) {
+    return res.status(200).json(part);
+   }
+
+   res.status(404).json({ message: "Peça não cadastrada" });
+
+}
+
+module.exports = {
+  registerPartController,
+  getPartController
+}

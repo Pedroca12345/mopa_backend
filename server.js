@@ -25,7 +25,7 @@ app.get("/home", authMiddleware, (req, res) => {
 });
 
 app.use("/", authRoutes);
-app.use("/", partRoutes)
+app.use("/", partRoutes);
 
 app.listen(3000, () => {
   console.log("app rodando na porta 3000");
