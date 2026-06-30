@@ -39,7 +39,7 @@ const registerPartController = async (req, res) => {
 const getPartController = async (req, res) => {
   const { 
     partcode
-   } = req.params;
+   } = req.query;
 
    const part = await Part.findOne({ partcode: partcode }).select("location description quantity");
 
