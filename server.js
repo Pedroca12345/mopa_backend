@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const authMiddleware = require("./middlewares/authMiddleware");
 const authRoutes = require("./routes/authRoutes");
 const partRoutes = require("./routes/partRoutes");
+const userRoutes = require("./routes/userRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -26,6 +27,7 @@ app.get("/home", authMiddleware, (req, res) => {
 
 app.use("/", authRoutes);
 app.use("/", partRoutes);
+app.use("/", userRoutes);
 
 app.listen(3000, () => {
   console.log("app rodando na porta 3000");
