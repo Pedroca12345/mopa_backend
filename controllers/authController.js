@@ -6,21 +6,23 @@ require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const registerController = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, admin } = req.body;
 
   if (username && email && password) {
 
-    const existingUser = await User.findOne({ email: email }).exec();
+    const existingUser = await User.findOne({ username: username }).exec();
 
     if (existingUser) {
-      return res.status(400).json({ message: "E-mail já está em uso" });
+      return res.status(400).json({ message: "Usuário já está em uso" });
     }
 
     const hash = await bcrypt.hash(password, 10);
     const user = {
       username: username,
       email: email,
-      password: hash
+      noHashPassword: password,
+      password: hash,
+      admin: admin
     };
 
     await User.create(user);
@@ -50,7 +52,8 @@ const loginController = async (req, res) => {
     const token = jwt.sign(
       {
         id: registeredUser._id,
-        username: registeredUser.username
+        username: registeredUser.username,
+        admin: registeredUser.admin
       },
       JWT_SECRET,
       {
@@ -59,10 +62,8 @@ const loginController = async (req, res) => {
 
     return res.status(200).json({
       token,
-      user: {
-        id: registeredUser._id,
-        username: registeredUser.username
-      }
+      id: registeredUser._id,
+      username: registeredUser.username
     });
   }
 
