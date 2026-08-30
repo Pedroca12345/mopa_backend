@@ -37,21 +37,79 @@ const registerPartController = async (req, res) => {
 }
 
 const getPartController = async (req, res) => {
-  const { 
+  const {
     partcode
-   } = req.query;
+  } = req.query;
 
-   const part = await Part.findOne({ partcode: partcode }).select("location description quantity");
+  const part = await Part.findOne({ partcode: partcode }).select("partcode location description quantity");
 
-   if(part) {
+  if (part) {
     return res.status(200).json(part);
-   }
+  }
 
-   res.status(404).json({ message: "Peça não cadastrada" });
+  res.status(404).json({ message: "Peça não cadastrada" });
+
+}
+
+const getPartsController = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 16;
+
+  const skip = (page - 1) * limit;
+
+  try {
+    const parts = await Part.find({})
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    return res.status(200).json({
+      currentPage: page,
+      totalOfPages: Math.ceil(parts.length / limit),
+      parts: parts,
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Erro ao buscar dados" });
+  }
+
+}
+
+const updatePartsController = async (req, res) => {
+  const {
+    partcode,
+    quantity,
+    description,
+    location
+  } = req.body;
+
+  try {
+    const updatedPart = await Part.findOneAndUpdate(
+    {
+      partcode: partcode,
+      location: location
+    },
+    {
+      partcode: partcode,
+      quantity: quantity,
+      description: description,
+      location: location
+    },
+    {
+      returnDocument: "after"
+    }).exec();
+
+    return res.status(200).json({ message: "peça alterada com sucesso" });
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({ message: "deu merda" });
+  }
 
 }
 
 module.exports = {
   registerPartController,
-  getPartController
+  getPartController,
+  getPartsController,
+  updatePartsController
 }
