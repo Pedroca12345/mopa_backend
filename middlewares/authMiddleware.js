@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-function authMiddleware(req, res, next) {
+const authMiddleware = (req, res, next) => {
   const header = req.headers.authorization;
 
   if (!header) {
@@ -22,7 +22,7 @@ function authMiddleware(req, res, next) {
     return next();
 
   } catch (err) {
-    return res.status(401).json({ message: "Não autorizado" })
+    return res.status(401).json({ message: "Não autorizado" });
   }
 
 }
